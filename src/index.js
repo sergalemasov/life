@@ -1,7 +1,42 @@
-var directions = require('./scripts/directions');
+var Wall = require('./scripts/wall');
+var BouncingCritter = require('./scripts/bouncing-critter');
+var World = require('./scripts/world');
+var Legend = require('./scripts/legend');
 
-window.addEventListener('load', function () {
-  var world = document.getElementById('world');
-  var output = '<pre>' + JSON.stringify(directions, null, 2) + '</pre>';
-  world.innerHTML = output;
-});
+var legend = {
+  "#": Wall,
+  "o": BouncingCritter
+};
+
+var plan = [
+  "############################",
+  "#      #    #      o      ##",
+  "#                          #",
+  "#          #####           #",
+  "##         #   #    ##     #",
+  "###           ##     #     #",
+  "#           ###      #     #",
+  "#   ####                   #",
+  "#   ##       o             #",
+  "# o  #         o       ### #",
+  "#    #                     #",
+  "############################"
+];
+
+function main() {
+  var container = document.getElementById('world');
+
+  var world = new World(plan, new Legend(legend));
+  draw(world.toString(), container);
+
+  setInterval(function () {
+    world.turn();
+    draw(world.toString(), container);
+  }, 300);
+}
+
+function draw(toDisplay, container) {
+  container.innerHTML = toDisplay;
+}
+
+window.addEventListener('load', main);
